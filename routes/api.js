@@ -13,7 +13,6 @@ router.get("/", (req, res) => {
       res.json(results);
     }
   );
-  connection.end();
 });
 
 // on the hero page, add a tally to show existing outings
