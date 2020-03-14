@@ -7,7 +7,7 @@
 }
 
 .search-content {
-  width: 100vw;
+  width: 100%;
   height: 100%;
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -24,4 +24,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.search-marker {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.search-marker img {
+  width: 30px;
+  height: 30px;
 }
