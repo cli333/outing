@@ -1,31 +1,22 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import "./LandingPage.css";
-import axios from "axios";
-import { ctx } from "../../context/Provider";
+import useLanding from "../../hooks/useLanding";
 
 const LandingPage = ({ history }) => {
-  const { setCurrentLocation } = useContext(ctx);
   const [query, setQuery] = useState("");
-  const handleSubmit = e => {
-    e.preventDefault();
-    axios.post("/api/search", { query }).then(res => {
-      const {
-        features: [{ center }]
-      } = res.data;
-      setCurrentLocation(center);
-      history.push("/search");
-    });
-  };
+  const { loading, handleSubmit } = useLanding(query, history);
+
   return (
     <div className="landing">
-      <h1 className="landing-header">Time for a new adventure</h1>
-      <h3>Discover your next hike.</h3>
+      <h1 className="landing-header">Discover what's out there</h1>
+      <h3>Plan your next outing.</h3>
       <form className="landing-form" onSubmit={e => handleSubmit(e)}>
         <input
           type="search"
           placeholder="Where are you located?"
           onChange={e => setQuery(e.target.value)}
           value={query}
+          disabled={loading}
         />
       </form>
     </div>

@@ -3,17 +3,36 @@ const router = express.Router();
 const mysql = require("mysql");
 const config = require("../config/config");
 const axios = require("axios");
-const { mapboxToken } = require("../api_keys/api_keys");
+const {
+  mapboxToken,
+  foursquareClientId,
+  foursquareClientSecret
+} = require("../api_keys/api_keys");
 
 const connection = mysql.createConnection(config);
 
-router.post("/search", (req, res) => {
+router.post("/search", async (req, res) => {
   const query = req.body.query.replace(/\s+/g, "%20");
-  axios
-    .get(
+  try {
+    const geolocation = await axios.get(
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?access_token=${mapboxToken}`
-    )
-    .then(result => res.json(result.data));
+    );
+    const {
+      features: [firstResult]
+    } = geolocation.data;
+    // const venues = await axios.get(
+    //   `https://api.foursquare.com/v2/venues/explore?
+    //       client_id=${foursquareClientId}&client_secret=${foursquareClientSecret}&ll=${firstResult.center[1].toFixed(
+    //     2
+    //   )},${firstResult.center[0].toFixed(
+    //     2
+    //   )}&v=20200101&openNow=1&sortyByPopularity=1`
+    // );
+
+    console.log(firstResult.center);
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 router.get("/", (req, res) => {
