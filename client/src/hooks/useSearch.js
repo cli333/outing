@@ -1,14 +1,16 @@
 import { useState, useContext } from "react";
-import axios from "axios";
 import { ctx } from "../context/Provider";
+import axios from "axios";
 
-const useLanding = (query, history) => {
-  const { setCurrentLocation, setDestinations } = useContext(ctx);
+const useSearch = query => {
+  const { currentLocation, setCurrentLocation, setDestinations } = useContext(
+    ctx
+  );
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = e => {
     e.preventDefault();
-    if (loading) return;
+    if (loading || currentLocation.place_name === query) return;
     setLoading(true);
     axios
       .post("/api", { query })
@@ -16,7 +18,6 @@ const useLanding = (query, history) => {
         const { currentLocation, destinations } = res.data;
         setCurrentLocation(currentLocation);
         setDestinations(destinations);
-        history.push("/search");
       })
       .catch(err => console.log(err))
       .finally(() => setLoading(false));
@@ -25,4 +26,4 @@ const useLanding = (query, history) => {
   return { loading, handleSubmit };
 };
 
-export default useLanding;
+export default useSearch;

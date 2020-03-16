@@ -2,34 +2,34 @@ import React, { useState, useEffect, useContext } from "react";
 import "./SearchPage.css";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import { ctx } from "../../context/Provider";
-import axios from "axios";
+import useSearch from "../../hooks/useSearch";
 
 const SearchPage = () => {
-  const { currentLocation } = useContext(ctx);
+  const { currentLocation, destinations } = useContext(ctx);
   const { place_name, center } = currentLocation;
+  const [query, setQuery] = useState(place_name);
+  const { loading, handleSubmit } = useSearch(query);
+  const [itinerary, setItinerary] = useState([]);
 
   const [viewport, setViewport] = useState({
     width: "100%",
     height: "100%",
     latitude: center[1],
     longitude: center[0],
-    zoom: 12.5
+    zoom: 13.5
   });
 
-  axios
-    .get(
-      `https://api.foursquare.com/v2/venues/explore?client_id=${
-        process.env.REACT_APP_FOURSQUARE_CLIENT_ID
-      }&client_secret=${
-        process.env.REACT_APP_FOURSQUARE_CLIENT_SECRET
-      }&ll=${center[1].toFixed(2)},${center[0].toFixed(
-        2
-      )}&v=20200101&openNow=1&sortyByPopularity=1`
-    )
-    .then(res => console.log(res.data))
-    .catch(err => console.log(err));
-
   const [selectedDestination, setSelectedDestination] = useState(null);
+
+  useEffect(() => {
+    setViewport({
+      width: "100%",
+      height: "100%",
+      latitude: currentLocation.center[1],
+      longitude: currentLocation.center[0],
+      zoom: 13.5
+    });
+  }, [currentLocation]);
 
   useEffect(() => {
     const listener = e => {
@@ -40,6 +40,53 @@ const SearchPage = () => {
     document.addEventListener("keydown", listener);
     return () => document.removeEventListener("keydown", listener);
   }, []);
+
+  const displayDestinations = () => {
+    return destinations.map(d => (
+      <Marker
+        key={d.venue.id}
+        latitude={d.venue.location.lat}
+        longitude={d.venue.location.lng}
+      >
+        <button
+          className="search-marker"
+          onClick={() => setSelectedDestination(d)}
+        >
+          <img src="/marker.svg" alt="Current Location" />
+        </button>
+      </Marker>
+    ));
+  };
+
+  const displayPopup = () => {
+    if (selectedDestination === currentLocation) {
+      return (
+        <Popup
+          latitude={currentLocation.center[1]}
+          longitude={currentLocation.center[0]}
+          onClose={() => setSelectedDestination(null)}
+        >
+          <div>
+            <h2>{currentLocation.place_name}</h2>
+          </div>
+        </Popup>
+      );
+    } else {
+      return (
+        <Popup
+          latitude={selectedDestination.venue.location.lat}
+          longitude={selectedDestination.venue.location.lng}
+          onClose={() => setSelectedDestination(null)}
+        >
+          <div>
+            <h2>{selectedDestination.venue.name}</h2>
+            <p>{selectedDestination.venue.location.address}</p>
+          </div>
+          <button>Add to itinerary</button>
+        </Popup>
+      );
+    }
+  };
 
   return (
     <div className="search">
@@ -56,47 +103,38 @@ const SearchPage = () => {
               latitude={center[1]}
               longitude={center[0]}
             >
-              <button className="search-marker">
+              <button
+                className="search-marker"
+                onClick={() => setSelectedDestination(currentLocation)}
+              >
                 <img src="/marker.svg" alt="Current Location" />
               </button>
             </Marker>
-
-            <Marker key="test" latitude={37.7749} longitude={-122.4194}>
-              <button
-                className="search-marker"
-                onClick={() =>
-                  setSelectedDestination({
-                    latitude: 37.7749,
-                    longitude: -122.4194
-                  })
-                }
-              >
-                <img src="/marker.svg" alt="Destination" />
-              </button>
-            </Marker>
-            {selectedDestination && (
-              <Popup
-                latitude={selectedDestination.latitude}
-                longitude={selectedDestination.longitude}
-                onClose={() => setSelectedDestination(null)}
-              >
-                <div>
-                  <img alt="The Destination" />
-                  <h2>Destination name</h2>
-                  <p>description</p>
-                </div>
-              </Popup>
-            )}
+            {destinations.length > 0 && displayDestinations()}
+            {selectedDestination && displayPopup()}
           </ReactMapGL>
         </div>
 
         <div className="search-content-right">
-          <div>{place_name}</div>
+          <form onSubmit={e => handleSubmit(e)}>
+            <input
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              disabled={loading}
+            />
+            <input type="submit" value="Submit" />
+          </form>
           <div>
-            <div>destination </div>
-            <div>destination </div>
-            <div>destination </div>
-            <div>destination </div>
+            <h2>Itinerary</h2>
+            {itinerary.length > 0 &&
+              itinerary.map((i, idx) => (
+                <div>
+                  destination
+                  <span>
+                    <button>Remove</button>
+                  </span>
+                </div>
+              ))}
           </div>
         </div>
       </div>

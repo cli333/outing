@@ -40,12 +40,15 @@ const defaultLocation = {
 
 const Provider = ({ children }) => {
   const [currentLocation, setCurrentLocation] = useState(defaultLocation);
+  const [destinations, setDestinations] = useState([]);
 
   return (
     <ctx.Provider
       value={{
         currentLocation,
-        setCurrentLocation
+        setCurrentLocation,
+        destinations,
+        setDestinations
       }}
     >
       {children}
