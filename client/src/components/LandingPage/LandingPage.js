@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./LandingPage.css";
 import useLanding from "../../hooks/useLanding";
+import Loader from "../Loader/Loader";
 
 const LandingPage = ({ history }) => {
   const [query, setQuery] = useState("");
@@ -18,9 +19,7 @@ const LandingPage = ({ history }) => {
           value={query}
           disabled={loading}
         />
-        <div class="loader-container">
-          <i class={loading ? "loader" : ""}></i>
-        </div>
+        <Loader loading={loading} />
       </form>
     </div>
   );

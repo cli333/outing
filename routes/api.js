@@ -31,7 +31,7 @@ router.post("/", async (req, res) => {
 
     res.json({
       currentLocation,
-      destinations: venues.data.response.groups[0].items
+      destinations: venues.data.response.groups[0].items.map(i => i.venue)
     });
   } catch (err) {
     res.status(404).json({ success: false });
@@ -39,9 +39,9 @@ router.post("/", async (req, res) => {
 });
 
 // get search destinations
-router.post("/search", async (req, res) => {
+router.post("/destinations", async (req, res) => {
   const query = req.body.query.replace(/\s+/g, "%20");
-  const currentLocation = req.body;
+  const { currentLocation } = req.body;
   try {
     const venues = await axios.get(
       `https://api.foursquare.com/v2/venues/search?client_id=${foursquareClientId}&client_secret=${foursquareClientSecret}&ll=${currentLocation.center[1].toFixed(
