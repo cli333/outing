@@ -18,6 +18,9 @@ const LandingPage = ({ history }) => {
           value={query}
           disabled={loading}
         />
+        <div class="loader-container">
+          <i class={loading ? "loader" : ""}></i>
+        </div>
       </form>
     </div>
   );

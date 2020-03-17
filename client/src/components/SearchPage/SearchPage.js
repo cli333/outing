@@ -59,33 +59,19 @@ const SearchPage = () => {
   };
 
   const displayPopup = () => {
-    if (selectedDestination === currentLocation) {
-      return (
-        <Popup
-          latitude={currentLocation.center[1]}
-          longitude={currentLocation.center[0]}
-          onClose={() => setSelectedDestination(null)}
-        >
-          <div>
-            <h2>{currentLocation.place_name}</h2>
-          </div>
-        </Popup>
-      );
-    } else {
-      return (
-        <Popup
-          latitude={selectedDestination.venue.location.lat}
-          longitude={selectedDestination.venue.location.lng}
-          onClose={() => setSelectedDestination(null)}
-        >
-          <div>
-            <h2>{selectedDestination.venue.name}</h2>
-            <p>{selectedDestination.venue.location.address}</p>
-          </div>
-          <button>Add to itinerary</button>
-        </Popup>
-      );
-    }
+    return (
+      <Popup
+        latitude={selectedDestination.venue.location.lat}
+        longitude={selectedDestination.venue.location.lng}
+        onClose={() => setSelectedDestination(null)}
+      >
+        <div>
+          <h2>{selectedDestination.venue.name}</h2>
+          <p>{selectedDestination.venue.location.address}</p>
+        </div>
+        <button>Add to itinerary</button>
+      </Popup>
+    );
   };
 
   return (
@@ -103,12 +89,12 @@ const SearchPage = () => {
               latitude={center[1]}
               longitude={center[0]}
             >
-              <button
-                className="search-marker"
-                onClick={() => setSelectedDestination(currentLocation)}
-              >
-                <img src="/marker.svg" alt="Current Location" />
-              </button>
+              <div className="current-location-wrapper">
+                <div className="current-location">
+                  <div></div>
+                  <div></div>
+                </div>
+              </div>
             </Marker>
             {destinations.length > 0 && displayDestinations()}
             {selectedDestination && displayPopup()}
