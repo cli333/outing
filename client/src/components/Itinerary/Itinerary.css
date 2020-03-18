@@ -1,0 +1,5 @@
+.itinerary {
+  overflow-y: hidden;
+  overflow-x: hidden;
+  height: 60vh;
+}

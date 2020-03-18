@@ -1,0 +1,13 @@
+.itinerary-item {
+  cursor: pointer;
+  z-index: 10px;
+  color: red;
+  background: black;
+  border-radius: 3px;
+  padding: 25px 30px;
+  justify-content: space-between;
+  margin-bottom: 25px;
+  width: 100%;
+  margin-right: 10%;
+  margin-left: 0;
+}

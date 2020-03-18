@@ -49,13 +49,30 @@ const SearchPage = () => {
     return () => document.removeEventListener("keydown", listener);
   }, []);
 
+  const handleItinerarySubmit = destination => {
+    let indexOfDestination = itinerary.indexOf(destination);
+    if (itinerary.length === 4) {
+      alert("too many destinations");
+      return;
+    } else if (indexOfDestination >= 0) {
+      let newItinerary = itinerary
+        .slice(0, indexOfDestination)
+        .concat(itinerary.slice(indexOfDestination + 1));
+      setItinerary(newItinerary);
+    } else {
+      setItinerary([...itinerary, destination]);
+    }
+  };
+
   const displayDestinations = () => {
     if (destinations.length > 0) {
       return destinations.map(d => (
         <Marker key={d.id} latitude={d.location.lat} longitude={d.location.lng}>
           <button
             className="search-marker"
-            onClick={() => setSelectedDestination(d)}
+            onMouseEnter={() => setSelectedDestination(d)}
+            onMouseLeave={() => setSelectedDestination(null)}
+            onClick={() => handleItinerarySubmit(d)}
           >
             {d.categories.length > 0 && d.categories[0].icon ? (
               <img
@@ -81,10 +98,14 @@ const SearchPage = () => {
       <Popup
         latitude={selectedDestination.location.lat}
         longitude={selectedDestination.location.lng}
-        onClose={() => setSelectedDestination(null)}
+        closeButton={false}
+        altitude={10}
+        offsetLeft={20}
       >
         <div>
           <h2>{selectedDestination.name}</h2>
+        </div>
+        <div>
           <p>{selectedDestination.location.address}</p>
         </div>
         <div>
@@ -92,11 +113,6 @@ const SearchPage = () => {
             .map(category => category.name)
             .join(", ")}
         </div>
-        <button
-          onClick={() => setItinerary([...itinerary, selectedDestination])}
-        >
-          Add to itinerary
-        </button>
       </Popup>
     );
   };
@@ -142,14 +158,16 @@ const SearchPage = () => {
             />
             <Loader loading={loading} />
           </form>
-
+          <br />
           <form
             onSubmit={e => handleDestinationsSubmit(e)}
             className="search-form"
           >
-            <label htmlFor="destination query">
-              Don't like your recommendations?
-            </label>
+            <div>
+              <label htmlFor="destination query">
+                Don't like your recommendations?
+              </label>
+            </div>
             <input
               name="destination query"
               type="search"
@@ -161,14 +179,9 @@ const SearchPage = () => {
           </form>
 
           <div>
-            <h2>Itinerary</h2>
-            <Itinerary
-              destinations={[
-                { id: 0, name: "one" },
-                { id: 1, name: "two" },
-                { id: 2, name: "three" }
-              ]}
-            />
+            <h2>Itinerary (max of 4 destinations)</h2>
+            <Itinerary />
+            <button>Get Directions</button>
           </div>
         </div>
       </div>
