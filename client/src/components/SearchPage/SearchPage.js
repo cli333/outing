@@ -196,7 +196,7 @@ const SearchPage = () => {
           </form>
 
           <div className="itinerary-wrapper">
-            <h3>Itinerary (max of 4 destinations)</h3>
+            <h3>Please Select at least 4 destinations</h3>
             <Itinerary itinerary={itinerary} />
             <button>Get Directions</button>
           </div>

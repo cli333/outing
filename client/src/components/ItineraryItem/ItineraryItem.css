@@ -4,10 +4,10 @@
   padding: 5% 5%;
   justify-content: space-between;
   margin-bottom: 25px;
-  width: 90%;
+  width: 70%;
   height: 6.5%;
   margin-right: 10%;
-  margin-left: 0;
+  margin-left: 10%;
   position: relative;
   overflow-x: hidden;
   overflow-y: hidden;
@@ -52,7 +52,9 @@
 
 .itinerary-item-left-address {
   text-overflow: ellipsis;
-  width: 75%;
+  word-wrap: break-word;
+  width: 80%;
   height: 25%;
-  margin-left: 5%;
+  margin-left: 1%;
+  font-style: italic;
 }
