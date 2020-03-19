@@ -2,8 +2,14 @@ import React from "react";
 import "./Itinerary.css";
 import ItineraryItem from "../ItineraryItem/ItineraryItem";
 
-const Itinerary = ({}) => {
-  return <div className="itinerary">brand new itinerary</div>;
+const Itinerary = ({ itinerary }) => {
+  return (
+    <div className="itinerary">
+      {itinerary.map((i, index) => (
+        <ItineraryItem key={i.id} destination={i} index={index} />
+      ))}
+    </div>
+  );
 };
 
 export default Itinerary;

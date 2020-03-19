@@ -3,9 +3,12 @@ import { ctx } from "../context/Provider";
 import axios from "axios";
 
 const useSearch = (query, setQuery, destinationQuery, setDestionationQuery) => {
-  const { currentLocation, setCurrentLocation, setDestinations } = useContext(
-    ctx
-  );
+  const {
+    currentLocation,
+    setCurrentLocation,
+    setDestinations,
+    setItinerary
+  } = useContext(ctx);
   const [loading, setLoading] = useState(false);
   const [destinationsLoading, setDestinationsLoading] = useState(false);
 
@@ -24,6 +27,7 @@ const useSearch = (query, setQuery, destinationQuery, setDestionationQuery) => {
       .finally(() => {
         setLoading(false);
         setQuery("");
+        setItinerary([]);
       });
   };
 

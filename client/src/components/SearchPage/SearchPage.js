@@ -7,7 +7,12 @@ import Loader from "../Loader/Loader";
 import Itinerary from "../Itinerary/Itinerary";
 
 const SearchPage = () => {
-  const { currentLocation, destinations } = useContext(ctx);
+  const {
+    currentLocation,
+    destinations,
+    itinerary,
+    handleItinerarySubmit
+  } = useContext(ctx);
   const { center, place_name } = currentLocation;
   const [query, setQuery] = useState("");
   const [destinationQuery, setDestinationQuery] = useState("");
@@ -17,7 +22,6 @@ const SearchPage = () => {
     destinationsLoading,
     handleDestinationsSubmit
   } = useSearch(query, setQuery, destinationQuery, setDestinationQuery);
-  const [itinerary, setItinerary] = useState([]);
 
   const [viewport, setViewport] = useState({
     width: "100%",
@@ -48,21 +52,6 @@ const SearchPage = () => {
     document.addEventListener("keydown", listener);
     return () => document.removeEventListener("keydown", listener);
   }, []);
-
-  const handleItinerarySubmit = destination => {
-    let indexOfDestination = itinerary.indexOf(destination);
-    if (itinerary.length === 4) {
-      alert("too many destinations");
-      return;
-    } else if (indexOfDestination >= 0) {
-      let newItinerary = itinerary
-        .slice(0, indexOfDestination)
-        .concat(itinerary.slice(indexOfDestination + 1));
-      setItinerary(newItinerary);
-    } else {
-      setItinerary([...itinerary, destination]);
-    }
-  };
 
   const displayDestinations = () => {
     if (destinations.length > 0) {
@@ -102,16 +91,12 @@ const SearchPage = () => {
         altitude={10}
         offsetLeft={20}
       >
-        <div>
-          <h2>{selectedDestination.name}</h2>
-        </div>
-        <div>
-          <p>{selectedDestination.location.address}</p>
-        </div>
-        <div>
-          {selectedDestination.categories
-            .map(category => category.name)
-            .join(", ")}
+        <div className="popup-container">
+          <h3>{selectedDestination.name}</h3>
+          <em>
+            {selectedDestination.categories[0] &&
+              selectedDestination.categories[0].name}
+          </em>
         </div>
       </Popup>
     );
@@ -146,7 +131,7 @@ const SearchPage = () => {
 
         <div className="search-content-right">
           <div>
-            <h4 className="search-content-right-name">{place_name}</h4>
+            <h3 className="search-content-right-name">{place_name}</h3>
           </div>
           <form onSubmit={e => handleSubmit(e)} className="search-form">
             <input
@@ -163,15 +148,9 @@ const SearchPage = () => {
             onSubmit={e => handleDestinationsSubmit(e)}
             className="search-form"
           >
-            <div>
-              <label htmlFor="destination query">
-                Don't like your recommendations?
-              </label>
-            </div>
             <input
-              name="destination query"
               type="search"
-              placeholder="Search nearby locations"
+              placeholder="Search destinations"
               value={destinationQuery}
               onChange={e => setDestinationQuery(e.target.value)}
             />
@@ -180,7 +159,7 @@ const SearchPage = () => {
 
           <div>
             <h2>Itinerary (max of 4 destinations)</h2>
-            <Itinerary />
+            <Itinerary itinerary={itinerary} />
             <button>Get Directions</button>
           </div>
         </div>

@@ -41,6 +41,45 @@ const defaultLocation = {
 const Provider = ({ children }) => {
   const [currentLocation, setCurrentLocation] = useState(defaultLocation);
   const [destinations, setDestinations] = useState([]);
+  const [itinerary, setItinerary] = useState([]);
+
+  const handleItinerarySubmit = destination => {
+    let indexOfDestination = itinerary.indexOf(destination);
+    if (indexOfDestination >= 0) {
+      let newItinerary = itinerary
+        .slice(0, indexOfDestination)
+        .concat(itinerary.slice(indexOfDestination + 1));
+      setItinerary(newItinerary);
+    } else if (indexOfDestination === -1 && itinerary.length < 4) {
+      setItinerary([...itinerary, destination]);
+    } else {
+      alert("too many destinations");
+    }
+  };
+
+  const handleItineraryMove = (item, move) => {
+    const newItinerary = itinerary.slice();
+    const index = newItinerary.indexOf(item);
+    switch (move) {
+      case "up":
+        if (index === 0) break;
+        [newItinerary[index - 1], newItinerary[index]] = [
+          newItinerary[index],
+          newItinerary[index - 1]
+        ];
+        break;
+      case "down":
+        if (index === 3 || !newItinerary[index + 1]) break;
+        [newItinerary[index + 1], newItinerary[index]] = [
+          newItinerary[index],
+          newItinerary[index + 1]
+        ];
+        break;
+      default:
+        break;
+    }
+    setItinerary(newItinerary);
+  };
 
   return (
     <ctx.Provider
@@ -48,7 +87,11 @@ const Provider = ({ children }) => {
         currentLocation,
         setCurrentLocation,
         destinations,
-        setDestinations
+        setDestinations,
+        itinerary,
+        setItinerary,
+        handleItinerarySubmit,
+        handleItineraryMove
       }}
     >
       {children}
