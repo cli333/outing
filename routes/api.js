@@ -20,7 +20,7 @@ router.post("/", async (req, res) => {
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?access_token=${mapboxToken}`
     );
     const {
-      features: [currentLocation]
+      features: [currentLocation, ...otherLocations]
     } = geolocation.data;
 
     const venues = await axios.get(
@@ -31,6 +31,7 @@ router.post("/", async (req, res) => {
 
     res.json({
       currentLocation,
+      otherLocations,
       destinations: venues.data.response.groups[0].items.map(i => i.venue)
     });
   } catch (err) {

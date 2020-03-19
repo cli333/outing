@@ -11,6 +11,20 @@ const useSearch = (query, setQuery, destinationQuery, setDestionationQuery) => {
   } = useContext(ctx);
   const [loading, setLoading] = useState(false);
   const [destinationsLoading, setDestinationsLoading] = useState(false);
+  const [display, setDisplay] = useState(false);
+  const [recommendations, setRecommendations] = useState([]);
+
+  const handleChange = (e, setQuery) => {
+    setQuery(e.target.value);
+    axios.post("/api", { query }).then(res => {
+      const newRecommendations = [
+        res.data.currentLocation,
+        ...res.data.otherLocations
+      ].map(rec => rec.place_name);
+      setRecommendations(newRecommendations);
+    });
+    setDisplay(true);
+  };
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -55,7 +69,11 @@ const useSearch = (query, setQuery, destinationQuery, setDestionationQuery) => {
     loading,
     handleSubmit,
     destinationsLoading,
-    handleDestinationsSubmit
+    handleDestinationsSubmit,
+    display,
+    setDisplay,
+    recommendations,
+    handleChange
   };
 };
 

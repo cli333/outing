@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import "./SearchPage.css";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import { ctx } from "../../context/Provider";
@@ -20,8 +20,13 @@ const SearchPage = () => {
     loading,
     handleSubmit,
     destinationsLoading,
-    handleDestinationsSubmit
+    handleDestinationsSubmit,
+    display,
+    setDisplay,
+    recommendations,
+    handleChange
   } = useSearch(query, setQuery, destinationQuery, setDestinationQuery);
+  const wrapperRef = useRef(null);
 
   const [viewport, setViewport] = useState({
     width: "100%",
@@ -102,6 +107,23 @@ const SearchPage = () => {
     );
   };
 
+  const handleClickOutside = e => {
+    const { current: wrap } = wrapperRef;
+    if (wrap && !wrap.contains(e.target)) {
+      setDisplay(false);
+    }
+  };
+
+  const handleClickRecommendation = recommendation => {
+    setQuery(recommendation);
+    setDisplay(false);
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <div className="search">
       <div className="search-content">
@@ -133,17 +155,6 @@ const SearchPage = () => {
           <div>
             <h3 className="search-content-right-name">{place_name}</h3>
           </div>
-          <form onSubmit={e => handleSubmit(e)} className="search-form">
-            <input
-              type="search"
-              placeholder="Change your location"
-              value={query}
-              onChange={e => setQuery(e.target.value)}
-              disabled={loading}
-            />
-            <Loader loading={loading} />
-          </form>
-          <br />
           <form
             onSubmit={e => handleDestinationsSubmit(e)}
             className="search-form"
@@ -156,9 +167,36 @@ const SearchPage = () => {
             />
             <Loader loading={destinationsLoading} />
           </form>
+          <form
+            ref={wrapperRef}
+            onSubmit={e => handleSubmit(e)}
+            className="search-form"
+          >
+            <input
+              type="search"
+              placeholder="Change your location"
+              value={query}
+              onChange={e => handleChange(e, setQuery)}
+              disabled={loading}
+            />
+            <Loader loading={loading} />
+            {display && query.length > 0 && (
+              <div className="autocomplete">
+                {recommendations.map((rec, i) => (
+                  <div
+                    onClick={() => handleClickRecommendation(rec)}
+                    className="recommendation"
+                    key={i}
+                  >
+                    {rec}
+                  </div>
+                ))}
+              </div>
+            )}
+          </form>
 
-          <div>
-            <h2>Itinerary (max of 4 destinations)</h2>
+          <div className="itinerary-wrapper">
+            <h3>Itinerary (max of 4 destinations)</h3>
             <Itinerary itinerary={itinerary} />
             <button>Get Directions</button>
           </div>

@@ -61,3 +61,25 @@
 .landing-form > input[type="search"]::-webkit-search-results-decoration {
   display: none;
 }
+
+.landing-form > .autocomplete {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.08);
+  top: 52px;
+  width: 100%;
+}
+
+.landing-form > .autocomplete > .recommendation {
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  font-style: italic;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.landing-form > .autocomplete > .recommendation:hover {
+  color: rgba(255, 255, 255, 0.9);
+}

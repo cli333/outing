@@ -52,33 +52,7 @@ const Provider = ({ children }) => {
       setItinerary(newItinerary);
     } else if (indexOfDestination === -1 && itinerary.length < 4) {
       setItinerary([...itinerary, destination]);
-    } else {
-      alert("too many destinations");
     }
-  };
-
-  const handleItineraryMove = (item, move) => {
-    const newItinerary = itinerary.slice();
-    const index = newItinerary.indexOf(item);
-    switch (move) {
-      case "up":
-        if (index === 0) break;
-        [newItinerary[index - 1], newItinerary[index]] = [
-          newItinerary[index],
-          newItinerary[index - 1]
-        ];
-        break;
-      case "down":
-        if (index === 3 || !newItinerary[index + 1]) break;
-        [newItinerary[index + 1], newItinerary[index]] = [
-          newItinerary[index],
-          newItinerary[index + 1]
-        ];
-        break;
-      default:
-        break;
-    }
-    setItinerary(newItinerary);
   };
 
   return (
@@ -90,8 +64,7 @@ const Provider = ({ children }) => {
         setDestinations,
         itinerary,
         setItinerary,
-        handleItinerarySubmit,
-        handleItineraryMove
+        handleItinerarySubmit
       }}
     >
       {children}

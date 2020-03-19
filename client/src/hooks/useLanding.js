@@ -3,8 +3,22 @@ import axios from "axios";
 import { ctx } from "../context/Provider";
 
 const useLanding = (query, history) => {
+  const [display, setDisplay] = useState(false);
+  const [recommendations, setRecommendations] = useState([]);
   const { setCurrentLocation, setDestinations } = useContext(ctx);
   const [loading, setLoading] = useState(false);
+
+  const handleChange = (e, setQuery) => {
+    setQuery(e.target.value);
+    axios.post("/api", { query }).then(res => {
+      const newRecommendations = [
+        res.data.currentLocation,
+        ...res.data.otherLocations
+      ].map(rec => rec.place_name);
+      setRecommendations(newRecommendations);
+    });
+    setDisplay(true);
+  };
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -22,7 +36,14 @@ const useLanding = (query, history) => {
       .finally(() => setLoading(false));
   };
 
-  return { loading, handleSubmit };
+  return {
+    loading,
+    handleSubmit,
+    display,
+    setDisplay,
+    recommendations,
+    handleChange
+  };
 };
 
 export default useLanding;

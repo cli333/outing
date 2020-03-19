@@ -1,36 +1,58 @@
 .itinerary-item {
-  z-index: 10px;
-  color: red;
-  background: black;
-  border-radius: 3px;
-  padding: 25px 30px;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgb(41, 41, 41);
+  padding: 5% 5%;
   justify-content: space-between;
   margin-bottom: 25px;
-  width: 80%;
+  width: 90%;
   height: 6.5%;
   margin-right: 10%;
   margin-left: 0;
   position: relative;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 .itinerary-item-control {
   cursor: pointer;
-  width: 10px;
-  color: green;
+  width: 20px;
+  height: 20px;
+  color: rgba(255, 255, 255, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.itinerary-item-control:hover {
+  box-shadow: 1px 1px 15px 1px #00d8ff;
 }
 
 .itinerary-item-right {
   position: absolute;
   top: 15%;
-  left: 3%;
+  right: 3%;
 }
 
 .itinerary-item-left {
-  position: absolute;
-  top: 25%;
-  left: 0;
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
+  width: 95%;
+}
+
+.itinerary-item-left-name {
+  display: flex;
+  justify-content: left;
+  word-wrap: break-word;
+  width: 45%;
+  height: 25%;
+  overflow: hidden;
+}
+
+.itinerary-item-left-address {
+  text-overflow: ellipsis;
+  width: 75%;
+  height: 25%;
+  margin-left: 5%;
 }

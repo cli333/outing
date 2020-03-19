@@ -122,6 +122,7 @@
   padding-left: 20px;
   text-shadow: rgba(0, 0, 0, 0.8) 0px 0px 3px;
   box-sizing: border-box;
+  z-index: -11;
 }
 
 .search-form > input[type="search"]::placeholder {
@@ -133,6 +134,10 @@
 .search-form > input[type="search"]::-webkit-search-results-button,
 .search-form > input[type="search"]::-webkit-search-results-decoration {
   display: none;
+}
+
+.search-form > input[type="search"]:first-child {
+  margin-bottom: 1rem;
 }
 
 .marker-icon {
@@ -166,4 +171,34 @@
 .mapboxgl-popup-content-wrapper {
   padding: 0;
   margin: 0 auto;
+}
+
+.search-form > .autocomplete {
+  position: absolute;
+  background-color: rgb(56, 56, 56);
+  top: 52px;
+  width: 100%;
+  z-index: 100;
+}
+
+.search-form > .autocomplete > .recommendation {
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  font-style: italic;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.search-form > .autocomplete > .recommendation:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.itinerary-wrapper {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 500px;
 }
