@@ -4,15 +4,9 @@ import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import { ctx } from "../../context/Provider";
 import useSearch from "../../hooks/useSearch";
 import Loader from "../Loader/Loader";
-import Itinerary from "../Itinerary/Itinerary";
 
 const SearchPage = () => {
-  const {
-    currentLocation,
-    destinations,
-    itinerary,
-    handleItinerarySubmit
-  } = useContext(ctx);
+  const { currentLocation, destinations } = useContext(ctx);
   const { center, place_name } = currentLocation;
   const [query, setQuery] = useState("");
   const [destinationQuery, setDestinationQuery] = useState("");
@@ -27,6 +21,7 @@ const SearchPage = () => {
     handleChange
   } = useSearch(query, setQuery, destinationQuery, setDestinationQuery);
   const wrapperRef = useRef(null);
+  const [selectedDestination, setSelectedDestination] = useState(null);
 
   const [viewport, setViewport] = useState({
     width: "100%",
@@ -35,8 +30,6 @@ const SearchPage = () => {
     longitude: center[0],
     zoom: 16
   });
-
-  const [selectedDestination, setSelectedDestination] = useState(null);
 
   useEffect(() => {
     setViewport({
@@ -66,7 +59,7 @@ const SearchPage = () => {
             className="search-marker"
             onMouseEnter={() => setSelectedDestination(d)}
             onMouseLeave={() => setSelectedDestination(null)}
-            onClick={() => handleItinerarySubmit(d)}
+            onClick={() => console.log("destination clicked")}
           >
             {d.categories.length > 0 && d.categories[0].icon ? (
               <img
@@ -194,12 +187,6 @@ const SearchPage = () => {
               </div>
             )}
           </form>
-
-          <div className="itinerary-wrapper">
-            <h3>Please Select at least 4 destinations</h3>
-            <Itinerary itinerary={itinerary} />
-            <button>Get Directions</button>
-          </div>
         </div>
       </div>
     </div>

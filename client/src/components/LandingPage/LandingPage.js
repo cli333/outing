@@ -25,6 +25,7 @@ const LandingPage = ({ history }) => {
   const handleClickRecommendation = recommendation => {
     setQuery(recommendation);
     setDisplay(false);
+    document.getElementById("landing-input").focus();
   };
 
   useEffect(() => {
@@ -43,6 +44,7 @@ const LandingPage = ({ history }) => {
         autoComplete="false"
       >
         <input
+          id="landing-input"
           type="search"
           placeholder="Where are you located?"
           onChange={e => handleChange(e, setQuery)}

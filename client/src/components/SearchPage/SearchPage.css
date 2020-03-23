@@ -198,11 +198,3 @@
 .search-form > .autocomplete > .recommendation:hover {
   color: rgba(255, 255, 255, 0.9);
 }
-
-.itinerary-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 100%;
-}

@@ -41,19 +41,6 @@ const defaultLocation = {
 const Provider = ({ children }) => {
   const [currentLocation, setCurrentLocation] = useState(defaultLocation);
   const [destinations, setDestinations] = useState([]);
-  const [itinerary, setItinerary] = useState([]);
-
-  const handleItinerarySubmit = destination => {
-    let indexOfDestination = itinerary.indexOf(destination);
-    if (indexOfDestination >= 0) {
-      let newItinerary = itinerary
-        .slice(0, indexOfDestination)
-        .concat(itinerary.slice(indexOfDestination + 1));
-      setItinerary(newItinerary);
-    } else if (indexOfDestination === -1 && itinerary.length < 4) {
-      setItinerary([...itinerary, destination]);
-    }
-  };
 
   return (
     <ctx.Provider
@@ -61,10 +48,7 @@ const Provider = ({ children }) => {
         currentLocation,
         setCurrentLocation,
         destinations,
-        setDestinations,
-        itinerary,
-        setItinerary,
-        handleItinerarySubmit
+        setDestinations
       }}
     >
       {children}
