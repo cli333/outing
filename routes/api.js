@@ -32,7 +32,9 @@ router.post("/", async (req, res) => {
     res.json({
       currentLocation,
       otherLocations,
-      destinations: venues.data.response.groups[0].items.map(i => i.venue)
+      destinations: venues.data.response.groups[0].items
+        .map(i => i.venue)
+        .filter(v => v.location.address)
     });
   } catch (err) {
     res.status(404).json({ success: false });
@@ -49,10 +51,15 @@ router.post("/destinations", async (req, res) => {
         2
       )},${currentLocation.center[0].toFixed(2)}&v=20200101&query=${query}`
     );
-    res.json(venues.data);
+    res.json(venues.data.response.venues.filter(v => v.location.address));
   } catch (err) {
     res.status(404).json({ success: false });
   }
+});
+
+router.post("/directions", async (req, res) => {
+  const { locationStart, locationEnd } = req.body;
+  console.log(locationStart, locationEnd);
 });
 
 // connection.query(

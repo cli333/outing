@@ -15,13 +15,6 @@ const LandingPage = ({ history }) => {
   } = useLanding(query, history);
   const wrapperRef = useRef(null);
 
-  const handleClickOutside = e => {
-    const { current: wrap } = wrapperRef;
-    if (wrap && !wrap.contains(e.target)) {
-      setDisplay(false);
-    }
-  };
-
   const handleClickRecommendation = recommendation => {
     setQuery(recommendation);
     setDisplay(false);
@@ -29,9 +22,15 @@ const LandingPage = ({ history }) => {
   };
 
   useEffect(() => {
+    const handleClickOutside = e => {
+      const { current: wrap } = wrapperRef;
+      if (wrap && !wrap.contains(e.target)) {
+        setDisplay(false);
+      }
+    };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [setDisplay]);
 
   return (
     <div className="landing">

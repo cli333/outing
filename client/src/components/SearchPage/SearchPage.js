@@ -8,7 +8,7 @@ import Loader from "../Loader/Loader";
 const SearchPage = () => {
   const { currentLocation, destinations } = useContext(ctx);
   const { center, place_name } = currentLocation;
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(place_name);
   const [destinationQuery, setDestinationQuery] = useState("");
   const {
     loading,
@@ -18,7 +18,9 @@ const SearchPage = () => {
     display,
     setDisplay,
     recommendations,
-    handleChange
+    handleChange,
+    myDestination,
+    setMyDestination
   } = useSearch(query, setQuery, destinationQuery, setDestinationQuery);
   const wrapperRef = useRef(null);
   const [selectedDestination, setSelectedDestination] = useState(null);
@@ -51,6 +53,20 @@ const SearchPage = () => {
     return () => document.removeEventListener("keydown", listener);
   }, []);
 
+  useEffect(() => {
+    if (myDestination)
+      setDestinationQuery(
+        `${myDestination.location.address}${
+          myDestination.location.crossStreet
+            ? " " +
+              (/^at\s/.test(myDestination.location.crossStreet)
+                ? myDestination.location.crossStreet
+                : "& " + myDestination.location.crossStreet)
+            : ""
+        }`
+      );
+  }, [myDestination]);
+
   const displayDestinations = () => {
     if (destinations.length > 0) {
       return destinations.map(d => (
@@ -59,7 +75,7 @@ const SearchPage = () => {
             className="search-marker"
             onMouseEnter={() => setSelectedDestination(d)}
             onMouseLeave={() => setSelectedDestination(null)}
-            onClick={() => console.log("destination clicked")}
+            onClick={() => setMyDestination(d)}
           >
             {d.categories.length > 0 && d.categories[0].icon ? (
               <img
@@ -100,22 +116,22 @@ const SearchPage = () => {
     );
   };
 
-  const handleClickOutside = e => {
-    const { current: wrap } = wrapperRef;
-    if (wrap && !wrap.contains(e.target)) {
-      setDisplay(false);
-    }
-  };
-
   const handleClickRecommendation = recommendation => {
     setQuery(recommendation);
     setDisplay(false);
+    document.getElementById("current-location-input").focus();
   };
 
   useEffect(() => {
+    const handleClickOutside = e => {
+      const { current: wrap } = wrapperRef;
+      if (wrap && !wrap.contains(e.target)) {
+        setDisplay(false);
+      }
+    };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [setDisplay]);
 
   return (
     <div className="search">
@@ -145,48 +161,66 @@ const SearchPage = () => {
         </div>
 
         <div className="search-content-right">
-          <div>
-            <h3 className="search-content-right-name">{place_name}</h3>
+          <div className="search-content-right-current">
+            <h2>Your Location</h2>
+            <form
+              ref={wrapperRef}
+              onSubmit={e => handleSubmit(e)}
+              className="search-form"
+            >
+              <input
+                id="current-location-input"
+                type="search"
+                placeholder="Change your location"
+                value={query}
+                onChange={e => handleChange(e, setQuery)}
+                disabled={loading}
+              />
+              <Loader loading={loading} />
+              {display && query.length > 0 && (
+                <div className="autocomplete">
+                  {recommendations.map((rec, i) => (
+                    <div
+                      onClick={() => handleClickRecommendation(rec)}
+                      className="recommendation"
+                      key={i}
+                    >
+                      {rec}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </form>
           </div>
-          <form
-            onSubmit={e => handleDestinationsSubmit(e)}
-            className="search-form"
-          >
-            <input
-              type="search"
-              placeholder="Search destinations"
-              value={destinationQuery}
-              onChange={e => setDestinationQuery(e.target.value)}
-            />
-            <Loader loading={destinationsLoading} />
-          </form>
-          <form
-            ref={wrapperRef}
-            onSubmit={e => handleSubmit(e)}
-            className="search-form"
-          >
-            <input
-              type="search"
-              placeholder="Change your location"
-              value={query}
-              onChange={e => handleChange(e, setQuery)}
-              disabled={loading}
-            />
-            <Loader loading={loading} />
-            {display && query.length > 0 && (
-              <div className="autocomplete">
-                {recommendations.map((rec, i) => (
-                  <div
-                    onClick={() => handleClickRecommendation(rec)}
-                    className="recommendation"
-                    key={i}
-                  >
-                    {rec}
-                  </div>
-                ))}
-              </div>
-            )}
-          </form>
+          <div className="search-content-right-directions">
+            <h2>Your directions</h2>
+            <li>the route</li>
+            <li>the route</li>
+            <li>the route</li>
+            <li>the route</li>
+            <li>the route</li>
+            <li>the route</li>
+            <li>the route</li>
+          </div>
+          <div className="search-content-right-destination">
+            <h2>Your Destination</h2>
+            <form
+              onSubmit={e => handleDestinationsSubmit(e)}
+              className="search-form"
+            >
+              <input
+                type="search"
+                placeholder="Search destinations"
+                value={destinationQuery}
+                onChange={e => setDestinationQuery(e.target.value)}
+              />
+              <Loader loading={destinationsLoading} />
+            </form>
+          </div>
+          <div className="search-content-right-buttons">
+            <button className="button submit">Submit</button>
+            <button className="button recommend">Get Recommendations</button>
+          </div>
         </div>
       </div>
     </div>

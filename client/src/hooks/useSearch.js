@@ -3,16 +3,14 @@ import { ctx } from "../context/Provider";
 import axios from "axios";
 
 const useSearch = (query, setQuery, destinationQuery, setDestionationQuery) => {
-  const {
-    currentLocation,
-    setCurrentLocation,
-    setDestinations,
-    setItinerary
-  } = useContext(ctx);
+  const { currentLocation, setCurrentLocation, setDestinations } = useContext(
+    ctx
+  );
   const [loading, setLoading] = useState(false);
   const [destinationsLoading, setDestinationsLoading] = useState(false);
   const [display, setDisplay] = useState(false);
   const [recommendations, setRecommendations] = useState([]);
+  const [myDestination, setMyDestination] = useState(null);
 
   const handleChange = (e, setQuery) => {
     setQuery(e.target.value);
@@ -40,8 +38,6 @@ const useSearch = (query, setQuery, destinationQuery, setDestionationQuery) => {
       .catch(err => console.log(err))
       .finally(() => {
         setLoading(false);
-        setQuery("");
-        setItinerary([]);
       });
   };
 
@@ -55,7 +51,7 @@ const useSearch = (query, setQuery, destinationQuery, setDestionationQuery) => {
         currentLocation
       })
       .then(res => {
-        let newDestinations = res.data.response.venues;
+        let newDestinations = res.data;
         setDestinations(newDestinations);
       })
       .catch(err => console.log(err))
@@ -73,7 +69,9 @@ const useSearch = (query, setQuery, destinationQuery, setDestionationQuery) => {
     display,
     setDisplay,
     recommendations,
-    handleChange
+    handleChange,
+    myDestination,
+    setMyDestination
   };
 };
 
