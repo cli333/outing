@@ -4,6 +4,8 @@ import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import { ctx } from "../../context/Provider";
 import useSearch from "../../hooks/useSearch";
 import Loader from "../Loader/Loader";
+import MapLine from "../MapLine/MapLine";
+import Directions from "../Directions/Directions";
 
 const SearchPage = () => {
   const { currentLocation, destinations } = useContext(ctx);
@@ -20,7 +22,10 @@ const SearchPage = () => {
     recommendations,
     handleChange,
     myDestination,
-    setMyDestination
+    setMyDestination,
+    handleDirectionsSubmit,
+    isGettingDirections,
+    directions
   } = useSearch(query, setQuery, destinationQuery, setDestinationQuery);
   const wrapperRef = useRef(null);
   const [selectedDestination, setSelectedDestination] = useState(null);
@@ -30,7 +35,7 @@ const SearchPage = () => {
     height: "100%",
     latitude: center[1],
     longitude: center[0],
-    zoom: 16
+    zoom: 5
   });
 
   useEffect(() => {
@@ -157,6 +162,7 @@ const SearchPage = () => {
             </Marker>
             {displayDestinations()}
             {selectedDestination && displayPopup()}
+            {directions.length > 0 && <MapLine directions={directions} />}
           </ReactMapGL>
         </div>
 
@@ -192,16 +198,7 @@ const SearchPage = () => {
               )}
             </form>
           </div>
-          <div className="search-content-right-directions">
-            <h2>Your directions</h2>
-            <li>the route</li>
-            <li>the route</li>
-            <li>the route</li>
-            <li>the route</li>
-            <li>the route</li>
-            <li>the route</li>
-            <li>the route</li>
-          </div>
+          <Directions directions={directions} />
           <div className="search-content-right-destination">
             <h2>Your Destination</h2>
             <form
@@ -218,8 +215,13 @@ const SearchPage = () => {
             </form>
           </div>
           <div className="search-content-right-buttons">
-            <button className="button submit">Submit</button>
-            <button className="button recommend">Get Recommendations</button>
+            <button
+              className="button submit"
+              onClick={() => handleDirectionsSubmit()}
+              disabled={isGettingDirections}
+            >
+              {`Submit${isGettingDirections ? "ting..." : ""}`}
+            </button>
           </div>
         </div>
       </div>

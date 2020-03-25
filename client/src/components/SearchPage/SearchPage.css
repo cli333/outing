@@ -173,7 +173,7 @@ input {
 
 .search-form > .autocomplete > .recommendation {
   color: black;
-  background: rgb(231, 231, 231);
+  background: rgb(210, 210, 210);
   display: flex;
   font-style: italic;
   align-items: center;
@@ -193,9 +193,10 @@ input {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  border: 2px solid red;
   height: 20vh;
   width: 85%;
+  z-index: 20;
+  padding-top: 5vh;
 }
 
 .search-content-right-destination {
@@ -203,18 +204,7 @@ input {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  border: 2px solid green;
   height: 20vh;
-  width: 85%;
-}
-
-.search-content-right-directions {
-  display: flex;
-  justify-content: center;
-  align-items: left;
-  flex-direction: column;
-  border: 2px solid yellow;
-  height: 30vh;
   width: 85%;
 }
 
@@ -223,15 +213,38 @@ input {
   justify-content: space-around;
   align-items: center;
   flex-direction: row;
-  border: 2px solid orange;
   height: 10vh;
   width: 85%;
+  padding-bottom: 5vh;
 }
 
-button {
+.search-content-right-buttons > .submit {
   border: none;
   outline: none;
   height: 3rem;
   padding: 0.5rem 1rem;
   font-size: 17px;
+  background: rgb(0, 0, 0);
+  color: white;
+  font-weight: 600;
+}
+
+.search-content-right-buttons > .submit:hover {
+  background: rgb(51, 51, 51);
+  cursor: pointer;
+}
+
+.search-content-right-buttons > .recommend {
+  border: none;
+  outline: none;
+  height: 3rem;
+  padding: 0.5rem 1rem;
+  font-size: 17px;
+  font-weight: 600;
+  background: rgb(231, 231, 231);
+}
+
+.search-content-right-buttons > .recommend:hover {
+  background: rgb(211, 211, 211);
+  cursor: pointer;
 }

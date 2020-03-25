@@ -6,15 +6,14 @@ const axios = require("axios");
 const {
   mapboxToken,
   foursquareClientId,
-  foursquareClientSecret
+  foursquareClientSecret,
+  mapquestKey
 } = require("../api_keys/api_keys");
 
 const connection = mysql.createConnection(config);
 
-// get current location
-// get recommended destinations
 router.post("/", async (req, res) => {
-  const query = req.body.query.replace(/\s+/g, "%20");
+  const query = encodeURIComponent(req.body.query);
   try {
     const geolocation = await axios.get(
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?access_token=${mapboxToken}`
@@ -22,6 +21,13 @@ router.post("/", async (req, res) => {
     const {
       features: [currentLocation, ...otherLocations]
     } = geolocation.data;
+
+    if (currentLocation.place_type[0] != "address") {
+      const address = await axios.get(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${currentLocation.center[0]}%2C%20${currentLocation.center[1]}.json?access_token=${mapboxToken}`
+      );
+      currentLocation.place_name = address.data.features[0].place_name;
+    }
 
     const venues = await axios.get(
       `https://api.foursquare.com/v2/venues/explore?client_id=${foursquareClientId}&client_secret=${foursquareClientSecret}&ll=${currentLocation.center[1].toFixed(
@@ -36,14 +42,11 @@ router.post("/", async (req, res) => {
         .map(i => i.venue)
         .filter(v => v.location.address)
     });
-  } catch (err) {
-    res.status(404).json({ success: false });
-  }
+  } catch (err) {}
 });
 
-// get search destinations
 router.post("/destinations", async (req, res) => {
-  const query = req.body.query.replace(/\s+/g, "%20");
+  const query = encodeURIComponent(req.body.query);
   const { currentLocation } = req.body;
   try {
     const venues = await axios.get(
@@ -58,8 +61,23 @@ router.post("/destinations", async (req, res) => {
 });
 
 router.post("/directions", async (req, res) => {
-  const { locationStart, locationEnd } = req.body;
-  console.log(locationStart, locationEnd);
+  const { currentLocation, myDestination } = req.body;
+  const locationStartAddress = encodeURIComponent(currentLocation.place_name);
+  const city = myDestination.location.city;
+  const state = myDestination.location.state;
+  const country = myDestination.location.country;
+  const locationEndAddress = encodeURIComponent(
+    myDestination.location.address + ", " + city + ", " + state + ", " + country
+  );
+
+  try {
+    const directions = await axios.get(
+      `https://www.mapquestapi.com/directions/v2/route?key=${mapquestKey}&from=${locationStartAddress}&to=${locationEndAddress}`
+    );
+    res.json(directions.data.route.legs[0].maneuvers);
+  } catch (err) {
+    res.status(404).json({ success: false });
+  }
 });
 
 // connection.query(
@@ -69,16 +87,5 @@ router.post("/directions", async (req, res) => {
 //     res.json(results);
 //   }
 // );
-
-// on the hero page, add a tally to show existing outings
-// router.get("/count", (req, res) => {
-//   connection.query(
-//     "SELECT COUNT(*) AS outings_count FROM outings",
-//     (err, results, fields) => {
-//       if (err) throw err;
-//       res.json(results.outings_count);
-//     }
-//   );
-// });
 
 module.exports = router;

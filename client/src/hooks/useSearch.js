@@ -11,6 +11,8 @@ const useSearch = (query, setQuery, destinationQuery, setDestionationQuery) => {
   const [display, setDisplay] = useState(false);
   const [recommendations, setRecommendations] = useState([]);
   const [myDestination, setMyDestination] = useState(null);
+  const [isGettingDirections, setIsGettingDirections] = useState(false);
+  const [directions, setDirections] = useState([]);
 
   const handleChange = (e, setQuery) => {
     setQuery(e.target.value);
@@ -34,10 +36,15 @@ const useSearch = (query, setQuery, destinationQuery, setDestionationQuery) => {
         const { currentLocation, destinations } = res.data;
         setCurrentLocation(currentLocation);
         setDestinations(destinations);
+        setQuery(currentLocation.place_name);
       })
       .catch(err => console.log(err))
       .finally(() => {
         setLoading(false);
+        setDestionationQuery("");
+        setMyDestination(null);
+        setDisplay(false);
+        setDirections([]);
       });
   };
 
@@ -58,7 +65,18 @@ const useSearch = (query, setQuery, destinationQuery, setDestionationQuery) => {
       .finally(() => {
         setDestinationsLoading(false);
         setDestionationQuery("");
+        setDirections([]);
       });
+  };
+
+  const handleDirectionsSubmit = () => {
+    if (currentLocation && myDestination && !isGettingDirections) {
+      setIsGettingDirections(true);
+      axios
+        .post("/api/directions", { currentLocation, myDestination })
+        .then(res => setDirections(res.data))
+        .finally(() => setIsGettingDirections(false));
+    }
   };
 
   return {
@@ -71,7 +89,10 @@ const useSearch = (query, setQuery, destinationQuery, setDestionationQuery) => {
     recommendations,
     handleChange,
     myDestination,
-    setMyDestination
+    setMyDestination,
+    handleDirectionsSubmit,
+    isGettingDirections,
+    directions
   };
 };
 

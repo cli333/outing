@@ -7,9 +7,12 @@ const foursquareClientId = "RP1FV02DXBNGR0YCDJMHGTFE43DUNNJHN0B1ZJOKQ02PQNN3";
 const foursquareClientSecret =
   "RZK1HUR0D215TPXVZN4OA1YVY3HYZJC0TDL3DZQBBII4YLBQ";
 
+const mapquestKey = "oF3zjxNWmKBtv9MUGVA5iky59COs0qdS";
+
 module.exports = {
   hikingProjectKey,
   mapboxToken,
   foursquareClientId,
-  foursquareClientSecret
+  foursquareClientSecret,
+  mapquestKey
 };
