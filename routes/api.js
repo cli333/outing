@@ -9,8 +9,23 @@ const {
   foursquareClientSecret,
   mapquestKey
 } = require("../api_keys/api_keys");
+const jwt = require("jsonwebtoken");
+const { verifyToken } = require("../middleware/middleware");
 
 const connection = mysql.createConnection(config);
+
+router.post("/test", verifyToken, (req, res) => {
+  jwt.verify(req.token, "secretkey", (err, authData) => {
+    if (err) {
+      res.sendStatus(403);
+    } else {
+      res.json({
+        message: "authenticated",
+        authData
+      });
+    }
+  });
+});
 
 router.post("/", async (req, res) => {
   const query = encodeURIComponent(req.body.query);
@@ -42,7 +57,9 @@ router.post("/", async (req, res) => {
         .map(i => i.venue)
         .filter(v => v.location.address)
     });
-  } catch (err) {}
+  } catch (err) {
+    res.status(404).json({ success: false });
+  }
 });
 
 router.post("/destinations", async (req, res) => {
@@ -67,7 +84,16 @@ router.post("/directions", async (req, res) => {
   const state = myDestination.location.state;
   const country = myDestination.location.country;
   const locationEndAddress = encodeURIComponent(
-    myDestination.location.address + ", " + city + ", " + state + ", " + country
+    myDestination.location.address +
+      (myDestination.location.crossStreet
+        ? " " + myDestination.location.crossStreet
+        : "") +
+      ", " +
+      city +
+      ", " +
+      state +
+      ", " +
+      country
   );
 
   try {

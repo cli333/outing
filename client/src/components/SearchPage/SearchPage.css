@@ -196,7 +196,7 @@ input {
   height: 20vh;
   width: 85%;
   z-index: 20;
-  padding-top: 5vh;
+  padding-top: 7vh;
 }
 
 .search-content-right-destination {
@@ -215,7 +215,7 @@ input {
   flex-direction: row;
   height: 10vh;
   width: 85%;
-  padding-bottom: 5vh;
+  padding-bottom: 3vh;
 }
 
 .search-content-right-buttons > .submit {
