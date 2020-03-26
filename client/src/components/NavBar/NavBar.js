@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./NavBar.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, withRouter } from "react-router-dom";
 import Login from "../Login/Login";
+import { authCtx } from "../../context/AuthProvider";
+import useLogin from "../../hooks/useLogin";
+import { ctx } from "../../context/Provider";
 
-const NavBar = () => {
+const NavBar = ({ history }) => {
+  const { displayLogin, setDisplayLogin } = useContext(ctx);
+  const { currentUser } = useContext(authCtx);
+  const { handleLogout } = useLogin();
+
   return (
     <nav className="navbar">
       <div className="navbar-left">
@@ -16,11 +23,22 @@ const NavBar = () => {
         </NavLink>
       </div>
       <div className="navbar-right">
-        <div className="navbar-link">Login</div>
+        {!currentUser ? (
+          <div
+            className="navbar-link"
+            onClick={() => setDisplayLogin(!displayLogin)}
+          >
+            Log In
+          </div>
+        ) : (
+          <div className="navbar-link" onClick={() => handleLogout()}>
+            Log Out
+          </div>
+        )}
         <Login />
       </div>
     </nav>
   );
 };
 
-export default NavBar;
+export default withRouter(NavBar);

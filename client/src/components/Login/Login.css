@@ -1,3 +1,7 @@
+.hide {
+  display: none;
+}
+
 .login-wrapper {
   position: absolute;
   top: 47px;

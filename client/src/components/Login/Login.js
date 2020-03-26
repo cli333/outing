@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./Login.css";
 import Loader from "../Loader/Loader";
-import useAuth from "../../hooks/useAuth";
+import useLogin from "../../hooks/useLogin";
+import { ctx } from "../../context/Provider";
 
 const Login = ({ history }) => {
-  const { email, setEmail, handleLogin, loading } = useAuth(history);
+  const { email, setEmail, handleLogin, loading } = useLogin(history);
+  const { displayLogin, setDisplayLogin } = useContext(ctx);
 
   return (
-    <div className="login-wrapper">
+    <div className={`login-wrapper ${!displayLogin ? "hide" : ""}`}>
       <form className="login-form" onSubmit={e => handleLogin(e)}>
         <input
           type="email"
@@ -17,7 +19,9 @@ const Login = ({ history }) => {
           disabled={loading}
         />
         <Loader loading={loading} />
-        <div className="login-close">✖</div>
+        <div className="login-close" onClick={() => setDisplayLogin(false)}>
+          ✖
+        </div>
       </form>
     </div>
   );
