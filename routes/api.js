@@ -90,23 +90,17 @@ router.post("/directions", verifyToken, (req, res) => {
       const city = myDestination.location.city;
       const state = myDestination.location.state;
       const country = myDestination.location.country;
-      const destinationString =
-        myDestination.location.address +
-        ", " +
-        city +
-        ", " +
-        state +
-        ", " +
-        country;
+      const destinationString = `${myDestination.location.address}${
+        city ? ", " + city : ""
+      }${state ? ", " + state : ""}${country ? ", " + country : ""}`;
       const locationEndAddress = encodeURIComponent(destinationString);
       try {
         const directions = await axios.get(
           `https://www.mapquestapi.com/directions/v2/route?key=${mapquestKey}&from=${locationStartAddress}&to=${locationEndAddress}`
         );
         const maneuvers = directions.data.route.legs[0].maneuvers;
-        console.log(maneuvers);
         connection.query(
-          "INSERT INTO trips(startingLocation, startingLocationCoordinates, directions, directionsCoordinates, destination, destinationCoordinates, destinationIcon, userId) VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
+          "INSERT INTO trips(startingLocation, startingLocationCoordinates, directions, directionsCoordinates, directionsIcons, destination, destinationCoordinates, destinationIcon, userId) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)",
           [
             currentLocation.place_name,
             JSON.stringify(currentLocation.center),
@@ -114,6 +108,7 @@ router.post("/directions", verifyToken, (req, res) => {
             JSON.stringify(
               maneuvers.map(m => [m.startPoint.lng, m.startPoint.lat])
             ),
+            JSON.stringify(maneuvers.map(m => m.iconUrl)),
             destinationString,
             JSON.stringify([
               myDestination.location.lng,

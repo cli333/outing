@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./TripsPage.css";
 import axios from "axios";
+import ReactMapGL, { Marker } from "react-map-gl";
+import MapLine from "../MapLine/MapLine";
 import { authCtx } from "../../context/AuthProvider";
 
 const TripsPage = () => {
@@ -8,13 +10,11 @@ const TripsPage = () => {
   const [trips, setTrips] = useState([]);
 
   useEffect(() => {
-    ((orderBy, where) => {
+    (() => {
       axios
         .get("/api/trips", {
           headers: {
-            authorization: `Bearer ${currentUser.token}`,
-            orderBy,
-            where
+            authorization: `Bearer ${currentUser.token}`
           }
         })
         .then(res => setTrips(res.data));
@@ -39,7 +39,22 @@ const TripsPage = () => {
                 <div className="column-2">{trip.startingLocation}</div>
                 <div className="column-2">{trip.destination}</div>
               </li>
-              {}
+              {
+                <div>
+                  <ReactMapGL
+                    viewport={{
+                      width: "100%",
+                      height: "100%",
+                      latitude: JSON.parse(trip.startingLocationCoordinates)[1],
+                      longitude: JSON.parse(
+                        trip.startingLocationCoordinates
+                      )[0],
+                      zoom: 16
+                    }}
+                    mapStyle="mapbox://styles/mapbox/dark-v10"
+                  />
+                </div>
+              }
             </div>
           ))}
       </ul>

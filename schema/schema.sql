@@ -15,6 +15,7 @@ CREATE TABLE users
     (100) NOT NULL,
     directions TEXT NOT NULL, 
     directionsCoordinates TEXT NOT NULL,
+    directionsIcons TEXT NOT NULL,
     destination VARCHAR
     (100) NOT NULL, 
     destinationCoordinates VARCHAR
