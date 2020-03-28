@@ -19,7 +19,7 @@ const useLogin = () => {
           "outingData",
           JSON.stringify({ ...res.data, email })
         );
-        setCurrentUser({ email });
+        setCurrentUser({ ...res.data, email });
       })
       .finally(() => {
         setLoading(false);

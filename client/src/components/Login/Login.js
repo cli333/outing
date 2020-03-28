@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import "./Login.css";
-import Loader from "../Loader/Loader";
 import useLogin from "../../hooks/useLogin";
 import { ctx } from "../../context/Provider";
+import Loader from "../Loader/Loader";
 
 const Login = ({ history }) => {
   const { email, setEmail, handleLogin, loading } = useLogin(history);
@@ -18,10 +18,11 @@ const Login = ({ history }) => {
           value={email}
           disabled={loading}
         />
-        <Loader loading={loading} />
+
         <div className="login-close" onClick={() => setDisplayLogin(false)}>
           ✖
         </div>
+        <Loader loading={loading} />
       </form>
     </div>
   );

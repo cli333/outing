@@ -6,11 +6,10 @@ import useSearch from "../../hooks/useSearch";
 import Loader from "../Loader/Loader";
 import MapLine from "../MapLine/MapLine";
 import Directions from "../Directions/Directions";
-import { authCtx } from "../../context/AuthProvider";
 
-const SearchPage = ({ history }) => {
+const SearchPage = () => {
   const { currentLocation, destinations } = useContext(ctx);
-  const { currentUser } = useContext(authCtx);
+
   const { center, place_name } = currentLocation;
   const [query, setQuery] = useState(place_name);
   const [destinationQuery, setDestinationQuery] = useState("");

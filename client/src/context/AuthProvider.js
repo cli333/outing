@@ -6,11 +6,15 @@ const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    let data = localStorage.getItem("outingData");
-    if (data) {
-      setCurrentUser({ email: JSON.parse(data).email });
+    let user = localStorage.getItem("outingData");
+    if (user) {
+      setCurrentUser(JSON.parse(user));
     }
   }, []);
+
+  // useEffect(() => {
+  //   return () => localStorage.removeItem("outingData");
+  // });
 
   return (
     <authCtx.Provider value={{ currentUser, setCurrentUser }}>
