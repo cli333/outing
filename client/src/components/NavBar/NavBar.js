@@ -31,9 +31,14 @@ const NavBar = ({ history }) => {
             Log In
           </div>
         ) : (
-          <div className="navbar-link" onClick={() => handleLogout()}>
-            Log Out
-          </div>
+          <React.Fragment>
+            <div className="navbar-link" onClick={() => history.push("/trips")}>
+              Your Trips
+            </div>
+            <div className="navbar-link" onClick={() => handleLogout()}>
+              Log Out
+            </div>
+          </React.Fragment>
         )}
         <Login />
       </div>

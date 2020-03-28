@@ -1,22 +1,30 @@
 import { useState, useContext } from "react";
 import axios from "axios";
 import { ctx } from "../context/Provider";
+import { authCtx } from "../context/AuthProvider";
 
 const useLanding = (query, history) => {
   const [display, setDisplay] = useState(false);
   const [recommendations, setRecommendations] = useState([]);
   const { setCurrentLocation, setDestinations } = useContext(ctx);
   const [loading, setLoading] = useState(false);
+  const { currentUser } = useContext(authCtx);
 
   const handleChange = (e, setQuery) => {
     setQuery(e.target.value);
-    axios.post("/api", { query }).then(res => {
-      const newRecommendations = [
-        res.data.currentLocation,
-        ...res.data.otherLocations
-      ].map(rec => rec.place_name);
-      setRecommendations(newRecommendations);
-    });
+    axios
+      .post(
+        "/api",
+        { query },
+        { headers: { authorization: `Bearer ${currentUser.token}` } }
+      )
+      .then(res => {
+        const newRecommendations = [
+          res.data.currentLocation,
+          ...res.data.otherLocations
+        ].map(rec => rec.place_name);
+        setRecommendations(newRecommendations);
+      });
     setDisplay(true);
   };
 
@@ -25,7 +33,11 @@ const useLanding = (query, history) => {
     if (loading) return;
     setLoading(true);
     axios
-      .post("/api", { query })
+      .post(
+        "/api",
+        { query },
+        { headers: { authorization: `Bearer ${currentUser.token}` } }
+      )
       .then(res => {
         const { currentLocation, destinations } = res.data;
         setCurrentLocation(currentLocation);

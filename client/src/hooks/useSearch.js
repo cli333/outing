@@ -1,11 +1,13 @@
 import { useState, useContext } from "react";
 import { ctx } from "../context/Provider";
 import axios from "axios";
+import { authCtx } from "../context/AuthProvider";
 
 const useSearch = (query, setQuery, destinationQuery, setDestionationQuery) => {
   const { currentLocation, setCurrentLocation, setDestinations } = useContext(
     ctx
   );
+  const { currentUser } = useContext(authCtx);
   const [loading, setLoading] = useState(false);
   const [destinationsLoading, setDestinationsLoading] = useState(false);
   const [display, setDisplay] = useState(false);
@@ -16,13 +18,19 @@ const useSearch = (query, setQuery, destinationQuery, setDestionationQuery) => {
 
   const handleChange = (e, setQuery) => {
     setQuery(e.target.value);
-    axios.post("/api", { query }).then(res => {
-      const newRecommendations = [
-        res.data.currentLocation,
-        ...res.data.otherLocations
-      ].map(rec => rec.place_name);
-      setRecommendations(newRecommendations);
-    });
+    axios
+      .post(
+        "/api",
+        { query },
+        { headers: { authorization: `Bearer ${currentUser.token}` } }
+      )
+      .then(res => {
+        const newRecommendations = [
+          res.data.currentLocation,
+          ...res.data.otherLocations
+        ].map(rec => rec.place_name);
+        setRecommendations(newRecommendations);
+      });
     setDisplay(true);
   };
 
@@ -31,7 +39,11 @@ const useSearch = (query, setQuery, destinationQuery, setDestionationQuery) => {
     if (loading || currentLocation.place_name === query) return;
     setLoading(true);
     axios
-      .post("/api", { query })
+      .post(
+        "/api",
+        { query },
+        { headers: { authorization: `Bearer ${currentUser.token}` } }
+      )
       .then(res => {
         const { currentLocation, destinations } = res.data;
         setCurrentLocation(currentLocation);
@@ -53,10 +65,14 @@ const useSearch = (query, setQuery, destinationQuery, setDestionationQuery) => {
     if (destinationsLoading) return;
     setDestinationsLoading(true);
     axios
-      .post("/api/destinations", {
-        query: destinationQuery,
-        currentLocation
-      })
+      .post(
+        "/api/destinations",
+        {
+          query: destinationQuery,
+          currentLocation
+        },
+        { headers: { authorization: `Bearer ${currentUser.token}` } }
+      )
       .then(res => {
         let newDestinations = res.data;
         setDestinations(newDestinations);
@@ -73,7 +89,11 @@ const useSearch = (query, setQuery, destinationQuery, setDestionationQuery) => {
     if (currentLocation && myDestination && !isGettingDirections) {
       setIsGettingDirections(true);
       axios
-        .post("/api/directions", { currentLocation, myDestination })
+        .post(
+          "/api/directions",
+          { currentLocation, myDestination },
+          { headers: { authorization: `Bearer ${currentUser.token}` } }
+        )
         .then(res => setDirections(res.data))
         .finally(() => setIsGettingDirections(false));
     }

@@ -6,6 +6,15 @@
   width: 85%;
 }
 
+.directions > ul > li {
+  list-style: none;
+  line-height: 1.5rem;
+}
+
+.directions > ul > li > img {
+  padding-right: 15px;
+}
+
 .hide {
   display: none;
 }

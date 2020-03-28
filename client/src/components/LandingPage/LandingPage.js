@@ -1,10 +1,12 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import "./LandingPage.css";
 import useLanding from "../../hooks/useLanding";
 import Loader from "../Loader/Loader";
+import { authCtx } from "../../context/AuthProvider";
 
 const LandingPage = ({ history }) => {
   const [query, setQuery] = useState("");
+  const { currentUser } = useContext(authCtx);
   const {
     loading,
     handleSubmit,
@@ -45,12 +47,13 @@ const LandingPage = ({ history }) => {
         <input
           id="landing-input"
           type="search"
-          placeholder="Where are you located?"
+          placeholder={!currentUser ? "Please login" : "Where are you located?"}
           onChange={e => handleChange(e, setQuery)}
           value={query}
-          disabled={loading}
+          disabled={loading || !currentUser}
         />
         <Loader loading={loading} />
+
         {display && query.length > 0 && (
           <div className="autocomplete">
             {recommendations.map((rec, i) => (

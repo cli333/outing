@@ -7,6 +7,7 @@ import SearchPage from "./components/SearchPage/SearchPage";
 import NavBar from "./components/NavBar/NavBar";
 import AuthProvider from "./context/AuthProvider";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
+import TripsPage from "./components/TripsPage/TripsPage";
 
 function App() {
   return (
@@ -18,6 +19,9 @@ function App() {
             <Route exact path="/" component={LandingPage} />
             <PrivateRoute path="/search">
               <SearchPage />
+            </PrivateRoute>
+            <PrivateRoute path="/trips">
+              <TripsPage />
             </PrivateRoute>
           </Switch>
         </Provider>

@@ -7,7 +7,10 @@ const Directions = ({ directions }) => {
       <h2>Your Directions</h2>
       <ul>
         {directions.map(d => (
-          <li key={d.index}>{d.narrative}</li>
+          <li key={d.index}>
+            <img alt="direction" src={d.iconUrl} />
+            {d.narrative}
+          </li>
         ))}
       </ul>
     </div>

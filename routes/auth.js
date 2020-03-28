@@ -14,7 +14,7 @@ if no user, create the user, return token
 router.post("/login", (req, res) => {
   const email = String(req.body.email);
   connection.query(
-    "SELECT * FROM users WHERE email = ? LIMIT 1",
+    "SELECT * FROM users WHERE email = ?",
     email,
     (err, results, fields) => {
       if (err) {
@@ -28,7 +28,7 @@ router.post("/login", (req, res) => {
           }
         );
         connection.query(
-          "SELECT * FROM users WHERE email = ? LIMIT 1",
+          "SELECT * FROM users WHERE email = ?",
           email,
           (err, results, fields) => {
             if (err) throw err;

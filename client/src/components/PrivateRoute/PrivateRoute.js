@@ -4,7 +4,6 @@ import { authCtx } from "../../context/AuthProvider";
 
 const PrivateRoute = ({ children, ...rest }) => {
   const { currentUser } = useContext(authCtx);
-  console.log(currentUser);
   return (
     <Route
       {...rest}
