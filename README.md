@@ -1,6 +1,7 @@
 # Outing - Discover what's out there
 
 ![DEMO](/client/public/screenshot1.jpg)
+![DEMO](/client/public/screenshot2.jpg)
 
 A trip planner app.
 
