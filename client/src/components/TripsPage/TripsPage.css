@@ -22,12 +22,6 @@
   padding: 15px 40px;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 25px;
-}
-
-.trips-table-row {
-  cursor: pointer;
-  background-color: lightcoral;
 }
 
 .column-1 {

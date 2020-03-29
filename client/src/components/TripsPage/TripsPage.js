@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./TripsPage.css";
 import axios from "axios";
-import ReactMapGL, { Marker } from "react-map-gl";
-import MapLine from "../MapLine/MapLine";
+import TripsItem from "../TripsItem/TripsItem";
+
 import { authCtx } from "../../context/AuthProvider";
 
 const TripsPage = () => {
@@ -30,33 +30,7 @@ const TripsPage = () => {
           <div className="column-2">Destination</div>
         </li>
         {trips.length > 0 &&
-          trips.map(trip => (
-            <div key={trip.id}>
-              <li className="trips-table-row">
-                <div className="column-1">
-                  {new Date(trip.createdAt).toLocaleDateString()}
-                </div>
-                <div className="column-2">{trip.startingLocation}</div>
-                <div className="column-2">{trip.destination}</div>
-              </li>
-              {
-                <div>
-                  <ReactMapGL
-                    viewport={{
-                      width: "100%",
-                      height: "100%",
-                      latitude: JSON.parse(trip.startingLocationCoordinates)[1],
-                      longitude: JSON.parse(
-                        trip.startingLocationCoordinates
-                      )[0],
-                      zoom: 16
-                    }}
-                    mapStyle="mapbox://styles/mapbox/dark-v10"
-                  />
-                </div>
-              }
-            </div>
-          ))}
+          trips.map(trip => <TripsItem {...trip} key={trip.id} />)}
       </ul>
     </div>
   );

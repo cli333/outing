@@ -8,7 +8,9 @@ const MapLine = ({ directions }) => {
     properties: {},
     geometry: {
       type: "LineString",
-      coordinates: directions.map(d => [d.startPoint.lng, d.startPoint.lat])
+      coordinates: directions.map(d =>
+        d.startPoint ? [d.startPoint.lng, d.startPoint.lat] : d
+      )
     }
   };
   return (

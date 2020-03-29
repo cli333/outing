@@ -6,6 +6,7 @@ import useSearch from "../../hooks/useSearch";
 import Loader from "../Loader/Loader";
 import MapLine from "../MapLine/MapLine";
 import Directions from "../Directions/Directions";
+import MarkerCurrentLocation from "../MarkerCurrentLocation/MarkerCurrentLocation";
 
 const SearchPage = () => {
   const { currentLocation, destinations } = useContext(ctx);
@@ -149,18 +150,7 @@ const SearchPage = () => {
             mapStyle="mapbox://styles/mapbox/dark-v10"
             onViewportChange={setViewport}
           >
-            <Marker
-              key="currentLocation"
-              latitude={center[1]}
-              longitude={center[0]}
-            >
-              <div className="current-location-wrapper">
-                <div className="current-location">
-                  <div></div>
-                  <div></div>
-                </div>
-              </div>
-            </Marker>
+            <MarkerCurrentLocation latitude={center[1]} longitude={center[0]} />
             {displayDestinations()}
             {selectedDestination && displayPopup()}
             {directions.length > 0 && <MapLine directions={directions} />}
@@ -169,7 +159,7 @@ const SearchPage = () => {
 
         <div className="search-content-right">
           <div className="search-content-right-current">
-            <h2>Your Location</h2>
+            <h2>Starting Location</h2>
             <form
               ref={wrapperRef}
               onSubmit={e => handleSubmit(e)}
@@ -201,7 +191,7 @@ const SearchPage = () => {
           </div>
           <Directions directions={directions} />
           <div className="search-content-right-destination">
-            <h2>Your Destination</h2>
+            <h2>Destination</h2>
             <form
               onSubmit={e => handleDestinationsSubmit(e)}
               className="search-form"

@@ -135,7 +135,7 @@ router.get("/trips", verifyToken, (req, res) => {
       res.sendStatus(403);
     } else {
       connection.query(
-        "SELECT startingLocation, directions, destination, trips.id, trips.createdAt FROM trips INNER JOIN users ON trips.userId = users.id WHERE trips.userId = ? ORDER BY trips.createdAt DESC",
+        "SELECT startingLocation, startingLocationCoordinates, directions, directionsCoordinates, directionsIcons, destination, destinationCoordinates, destinationIcon, trips.id, trips.createdAt FROM trips INNER JOIN users ON trips.userId = users.id WHERE trips.userId = ? ORDER BY trips.createdAt DESC",
         [authData.id],
         (err, results, fields) => {
           if (err) {
