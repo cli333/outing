@@ -12,9 +12,9 @@ const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   return () => localStorage.removeItem("outingData");
-  // });
+  useEffect(() => {
+    return () => localStorage.removeItem("outingData");
+  });
 
   return (
     <authCtx.Provider value={{ currentUser, setCurrentUser }}>

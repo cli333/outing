@@ -1,13 +1,14 @@
 # Outing - Discover what's out there
 
+![DEMO](/client/public/screenshot4.jpg)
 ![DEMO](/client/public/screenshot1.jpg)
-![DEMO](/client/public/screenshot2.jpg)
 
 A trip planner app.
 
 <li>Find local hotspots.</li>
 <li>Search for places using keywords.</li>
 <li>Get driving directions and a route.</li>
+<li>Autosuggests while typing.</li>
 <li>Uses mapbox, foursquare, and mapquest apis.</li>
 
 ## Summary

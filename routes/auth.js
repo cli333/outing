@@ -6,11 +6,6 @@ const jwt = require("jsonwebtoken");
 
 const connection = mysql.createConnection(config);
 
-/* 
-find the user, return token
-if no user, create the user, return token
-*/
-
 router.post("/login", (req, res) => {
   const email = String(req.body.email);
   connection.query(
